@@ -68,6 +68,56 @@
     - zabbix-agent
     - config
 
+- name: "Zabbix | Deploy preshared key file"
+  template:
+    src: zabbix_lab_cert.psk.j2
+    dest: /etc/zabbix/zabbix_agentd.psk
+    owner: zabbix
+    group: zabbix
+    mode: '0400'
+  no_log: false
+  tags:
+    - zabbix-agent
+
+- name: "Zabbix | Deploy Zabbix SE Linux file1"
+  copy:
+    src: zabbix_megacli.te
+    dest: /etc/zabbix/zabbix_megacli.te
+
+- name: "Zabbix | Deploy Zabbix SE Linux file2"
+  copy:
+    src: zabbix_megacli.pp
+    dest: /etc/zabbix/zabbix_megacli.pp
+
+- name: "Zabbix | test to see if selinux is running"
+  command: getenforce
+  register: sestatus
+  failed_when: false
+  changed_when: false
+
+- name: "Zabbix | check if zabbix_megacli semodule is installed"
+  shell: "semodule -l| grep zabbix_megacli"
+  register: zabbix_megacli_semodule
+  failed_when: false
+  changed_when: false
+
+- name: "Zabbix | Install custom zabbix selinux module"
+  shell: /sbin/semodule -i /etc/zabbix/zabbix_megacli.pp
+  when: sestatus.rc == 0 and zabbix_megacli_semodule.stdout.find('zabbix_megacli') != 0
+
+
+- name: "Zabbix | Enable selinux boolean: zabbix_can_network"
+  seboolean:
+    name: zabbix_can_network
+    state: yes
+    persistent: yes
+
+- name: "Zabbix | Enable selinux boolean: httpd_can_connect_zabbix"
+  seboolean:
+    name: httpd_can_connect_zabbix
+    state: yes
+    persistent: yes
+
 - name: "Configure zabbix-agent"
   template: src=zabbix_agentd.conf.j2
             dest=/etc/zabbix/zabbix_agentd.conf
@@ -146,3 +196,4 @@
   become: no
   tags:
     - api
+

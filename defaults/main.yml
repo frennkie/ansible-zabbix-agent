@@ -72,3 +72,6 @@ agent_tlscertfile:
 agent_tlskeyfile:
 agent_tlspskidentity:
 agent_tlspskfile:
+
+agent_deploy_tlspskfile: false
+agent_deploy_tlspsk:
