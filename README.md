@@ -21,8 +21,6 @@ Table of Contents
 
 #Overview
 
-## Issue: selinux !
-
 Build Status:
 
 [![Build Status](https://travis-ci.org/dj-wasabi/ansible-zabbix-agent.svg?branch=master)](https://travis-ci.org/dj-wasabi/ansible-zabbix-agent)
