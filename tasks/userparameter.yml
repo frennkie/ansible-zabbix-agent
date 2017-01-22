@@ -1,10 +1,33 @@
 ---
 
-- name: "Installing sample file"
-  copy: src=sample.conf
-        dest="{{ agent_include }}/mysql.conf"
+- name: "Installing apt-updates file"
+  copy: src=apt-updates.conf
+        dest="{{ agent_include }}/apt-updates.conf"
         owner=zabbix
         group=zabbix
-        mode=0755
+        mode=0644
   notify: restart zabbix-agent
-  become: yes
+
+- name: "Installing inventory file"
+  copy: src=inventory.conf
+        dest="{{ agent_include }}/inventory.conf"
+        owner=zabbix
+        group=zabbix
+        mode=0644
+  notify: restart zabbix-agent
+
+- name: "Installing linux file"
+  copy: src=linux.conf
+        dest="{{ agent_include }}/linux.conf"
+        owner=zabbix
+        group=zabbix
+        mode=0644
+  notify: restart zabbix-agent
+
+#- name: "Installing sample file"
+#  copy: src=sample.conf
+#        dest="{{ agent_include }}/mysql.conf"
+#        owner=zabbix
+#        group=zabbix
+#        mode=0644
+#  notify: restart zabbix-agent

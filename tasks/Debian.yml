@@ -48,19 +48,24 @@
   apt_key: id="{{ sign_keys[zabbix_short_version][ansible_distribution_release]['sign_key'] }}"
            url=http://repo.zabbix.com/zabbix-official-repo.key
   when: zabbix_repo == "zabbix"
+  environment:
+          http_proxy: "{{ http_proxy }}"
   become: yes
   tags:
     - zabbix-agent
     - init
 
-- name: "Debian | Installing zabbix-agent"
-  apt: pkg={{ zabbix_agent_package }}
-       state={{ zabbix_agent_package_state }}
-       update_cache=yes
+- name: "Debian | Update apt package cache"
+  apt: update_cache=yes
        cache_valid_time=0
        # Note: set cache_valid_time=0 to ensure that an apt-get update after the added repo-key
        # else you often get 'WARNING: The following packages cannot be authenticated!
        # See also: http://askubuntu.com/questions/75565/why-am-i-getting-authentication-errors-for-packages-from-an-ubuntu-repository
+  changed_when: false
+
+- name: "Debian | Installing zabbix-agent"
+  apt: pkg={{ zabbix_agent_package }}
+       state={{ zabbix_agent_package_state }}
 
   become: yes
   tags:

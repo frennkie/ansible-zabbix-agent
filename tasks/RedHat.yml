@@ -29,6 +29,15 @@
     - init
     - config
 
+- name: "RedHat | Add firewall rule for 10050/tcp"
+  firewalld:
+    port: 10050/tcp
+    permanent: true
+    state: enabled
+
+- name: "RedHat | restart firewalld"
+  service: name=firewalld state=restarted
+
 - name: "RedHat | Installing zabbix-agent"
   yum:  pkg={{ zabbix_agent_package }}
         state={{ zabbix_agent_package_state }}

@@ -8,6 +8,7 @@
       with_items:
         - net-tools
         - which
+        - libsemanage-python
       when: ansible_distribution == 'CentOS'
     - name: "Installing which on NON-CentOS"
       action: apt
